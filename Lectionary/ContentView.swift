@@ -26,6 +26,7 @@ struct ContentView: View {
 						}
 					}.fixedSize().disabled(model.source.availableLanguages.count < 2)
 				}.frame(maxWidth: .infinity, alignment: .leading)
+				Divider()
 				ScrollView(.vertical) {
 					ReadingsView(model: model.readingsModel)
 				}
@@ -62,7 +63,8 @@ struct ReadingsView: View {
 		case .title(let text):
 			return AnyView(Text(text).font(.title))
 		case .liturgicalDate(let text):
-			return AnyView(Text(text))
+			return AnyView(Text(text)
+				.fontWeight(.semibold))
 		case .text(let text):
 			return AnyView(Text(text))
 		case .bibleVerse(let text, _):
