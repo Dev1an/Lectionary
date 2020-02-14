@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,6 +12,11 @@
 		74BB998923F6D9AD00A575A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 74BB998823F6D9AD00A575A8 /* Assets.xcassets */; };
 		74BB998C23F6D9AD00A575A8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 74BB998B23F6D9AD00A575A8 /* Preview Assets.xcassets */; };
 		74BB998F23F6D9AD00A575A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74BB998D23F6D9AD00A575A8 /* Main.storyboard */; };
+		74BB999A23F6DCAB00A575A8 /* DionysiusParochieReadings in Frameworks */ = {isa = PBXBuildFile; productRef = 74BB999923F6DCAB00A575A8 /* DionysiusParochieReadings */; };
+		74BB999C23F6DCAB00A575A8 /* Evangelizo in Frameworks */ = {isa = PBXBuildFile; productRef = 74BB999B23F6DCAB00A575A8 /* Evangelizo */; };
+		74BB999E23F6DCAB00A575A8 /* UsccbReadings in Frameworks */ = {isa = PBXBuildFile; productRef = 74BB999D23F6DCAB00A575A8 /* UsccbReadings */; };
+		74C5EB1523F6EFF00030E07B /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C5EB1423F6EFF00030E07B /* ViewModel.swift */; };
+		74C5EB1723F6F20E0030E07B /* ReadingSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C5EB1623F6F20E0030E07B /* ReadingSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +28,9 @@
 		74BB998E23F6D9AD00A575A8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		74BB999023F6D9AD00A575A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		74BB999123F6D9AD00A575A8 /* Lectionary.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Lectionary.entitlements; sourceTree = "<group>"; };
+		74BB999723F6DC9400A575A8 /* HMassTexts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = HMassTexts; path = ../HMassTexts; sourceTree = "<group>"; };
+		74C5EB1423F6EFF00030E07B /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		74C5EB1623F6F20E0030E07B /* ReadingSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +38,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				74BB999E23F6DCAB00A575A8 /* UsccbReadings in Frameworks */,
+				74BB999C23F6DCAB00A575A8 /* Evangelizo in Frameworks */,
+				74BB999A23F6DCAB00A575A8 /* DionysiusParochieReadings in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,8 +50,10 @@
 		74BB997823F6D9AB00A575A8 = {
 			isa = PBXGroup;
 			children = (
+				74BB999723F6DC9400A575A8 /* HMassTexts */,
 				74BB998323F6D9AB00A575A8 /* Lectionary */,
 				74BB998223F6D9AB00A575A8 /* Products */,
+				74BB999823F6DCAB00A575A8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,6 +70,8 @@
 			children = (
 				74BB998423F6D9AB00A575A8 /* AppDelegate.swift */,
 				74BB998623F6D9AB00A575A8 /* ContentView.swift */,
+				74C5EB1623F6F20E0030E07B /* ReadingSource.swift */,
+				74C5EB1423F6EFF00030E07B /* ViewModel.swift */,
 				74BB998823F6D9AD00A575A8 /* Assets.xcassets */,
 				74BB998D23F6D9AD00A575A8 /* Main.storyboard */,
 				74BB999023F6D9AD00A575A8 /* Info.plist */,
@@ -72,6 +87,13 @@
 				74BB998B23F6D9AD00A575A8 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		74BB999823F6DCAB00A575A8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -90,6 +112,11 @@
 			dependencies = (
 			);
 			name = Lectionary;
+			packageProductDependencies = (
+				74BB999923F6DCAB00A575A8 /* DionysiusParochieReadings */,
+				74BB999B23F6DCAB00A575A8 /* Evangelizo */,
+				74BB999D23F6DCAB00A575A8 /* UsccbReadings */,
+			);
 			productName = Lectionary;
 			productReference = 74BB998123F6D9AB00A575A8 /* Lectionary.app */;
 			productType = "com.apple.product-type.application";
@@ -146,6 +173,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				74BB998723F6D9AB00A575A8 /* ContentView.swift in Sources */,
+				74C5EB1723F6F20E0030E07B /* ReadingSource.swift in Sources */,
+				74C5EB1523F6EFF00030E07B /* ViewModel.swift in Sources */,
 				74BB998523F6D9AB00A575A8 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -345,6 +374,21 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		74BB999923F6DCAB00A575A8 /* DionysiusParochieReadings */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DionysiusParochieReadings;
+		};
+		74BB999B23F6DCAB00A575A8 /* Evangelizo */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Evangelizo;
+		};
+		74BB999D23F6DCAB00A575A8 /* UsccbReadings */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = UsccbReadings;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 74BB997923F6D9AB00A575A8 /* Project object */;
 }
