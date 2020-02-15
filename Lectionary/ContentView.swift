@@ -41,7 +41,7 @@ struct ContentView: View {
 	}
 }
 
-import HMassTexts
+import LectionaryScraper
 
 struct ReadingsView: View {
 	@ObservedObject var model: ReadingsModel

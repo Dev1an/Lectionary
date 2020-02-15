@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import HMassTexts
+import LectionaryScraper
 
 class ViewModel: ObservableObject {
 	@Published var date = Date()
