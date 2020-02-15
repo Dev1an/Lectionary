@@ -32,7 +32,7 @@ struct ContentView: View {
 				}
 			}
 			VStack {
-				Text("Date")
+				Text("Date").padding(.top, 3)
 				DatePicker(selection: $model.date, displayedComponents: .date) {EmptyView()}
 				DatePicker(selection: $model.date, displayedComponents: .date) {EmptyView()}
 					.datePickerStyle(GraphicalDatePickerStyle())
@@ -70,7 +70,7 @@ struct ReadingsView: View {
 		case .bibleVerse(let text, _):
 			return AnyView(Text(text))
 		case .source(let text):
-			return AnyView(Text(text))
+			return AnyView(Text(text).foregroundColor(.secondary))
 		case .responseTitle:
 			return AnyView(Text("Response").foregroundColor(.red))
 		case .paragraphBreak:
