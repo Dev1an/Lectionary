@@ -22,7 +22,7 @@ struct ContentView: View {
 					}.fixedSize()
 					Picker(selection: $model.language, label: EmptyView()) {
 						ForEach(model.source.availableLanguages, id: \.self) {
-							Text($0)
+							Text(Locale.current.localizedString(forLanguageCode: $0) ?? $0)
 						}
 					}.fixedSize().disabled(model.source.availableLanguages.count < 2)
 				}.frame(maxWidth: .infinity, alignment: .leading)
@@ -36,6 +36,12 @@ struct ContentView: View {
 				DatePicker(selection: $model.date, displayedComponents: .date) {EmptyView()}
 				DatePicker(selection: $model.date, displayedComponents: .date) {EmptyView()}
 					.datePickerStyle(GraphicalDatePickerStyle())
+
+				Divider()
+
+				Button("Generate Booklet") {
+					createBooklet(for: self.model.date)
+				}
 			}.fixedSize()
 		}.padding()
 	}
