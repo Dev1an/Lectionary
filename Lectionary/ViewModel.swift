@@ -68,7 +68,7 @@ class ReadingsModel: ObservableObject {
 				if let readings = calendar[dateTuple] {
 					DispatchQueue.global().async {
 						let text: [[StyledTextSegment]] = readings.map {
-							do { return try $0.download() }
+							do { return try $0.download().styledText() }
 							catch { return [StyledTextSegment.text(error.localizedDescription)] }
 						}
 						DispatchQueue.main.sync {

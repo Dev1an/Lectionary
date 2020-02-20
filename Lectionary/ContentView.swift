@@ -28,7 +28,10 @@ struct ContentView: View {
 				}.frame(maxWidth: .infinity, alignment: .leading)
 				Divider()
 				ScrollView(.vertical) {
-					ReadingsView(model: model.readingsModel)
+					ReadingsView(model: model.readingsModel).onDrag { () -> NSItemProvider in
+						let item = NSItemProvider(object: createBooklet(for: self.model.date))
+						return item
+					}
 				}
 			}
 			VStack {
@@ -37,11 +40,6 @@ struct ContentView: View {
 				DatePicker(selection: $model.date, displayedComponents: .date) {EmptyView()}
 					.datePickerStyle(GraphicalDatePickerStyle())
 
-				Divider()
-
-				Button("Generate Booklet") {
-					createBooklet(for: self.model.date)
-				}
 			}.fixedSize()
 		}.padding()
 	}

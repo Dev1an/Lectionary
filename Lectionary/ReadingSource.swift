@@ -23,7 +23,7 @@ enum ReadingSource: Int, CaseIterable, CustomStringConvertible {
 
 	var availableLanguages: [String] {
 		switch self {
-		case .evangelizo: return Array(Evangelizo.languageTags.keys)
+		case .evangelizo: return Array(Evangelizo.languageTags.keys).sorted()
 		case .dionysius: return ["nl"]
 		case .usccb: return ["en"]
 		}
