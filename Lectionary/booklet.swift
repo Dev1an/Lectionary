@@ -38,21 +38,90 @@ struct Readings: Encodable {
 }
 
 class BookletInfo: NSObject, NSItemProviderWriting, Encodable {
-	static let writableTypeIdentifiersForItemProvider = [kUTTypeUTF8PlainText as String]
+	static let writableTypeIdentifiersForItemProvider = [kUTTypeJSON as String, kUTTypeUTF8PlainText as String]
 
+	let date: Date
 	var dutch = Readings.none
 	var english = Readings.none
 	let type = "com.devian.nightfever-booklet-generation.readings"
 
+	init(for date: Date) {
+		self.date = date
+	}
+
 	func loadData(withTypeIdentifier typeIdentifier: String, forItemProviderCompletionHandler completionHandler: @escaping (Data?, Error?) -> Void) -> Progress? {
-		print(typeIdentifier)
-		do {
-			let json = try JSONEncoder().encode(self)
-			completionHandler(json, nil)
-		} catch {
-			completionHandler(nil, error)
+		let dateTuple = try! DateTuple(from: date.components)
+
+		let progress = Progress(totalUnitCount: 3)
+		let downloads = DispatchGroup()
+
+		for language in [LanguageTag.english, .dutch] {
+			downloads.enter()
+			Evangelizo.downloadLiturgicalInfo(of: dateTuple, session: session, priority: .normal, language: language) { (result) in
+				switch result {
+				case .success(let info):
+					let triple = getBasicInfo(from: info)
+					serialQueue.sync {
+						self[language].readings = triple.readings
+						self[language].psalm = triple.psalm
+						self[language].gospel = triple.gospel
+					}
+				case .failure(let error):
+					print(error)
+					Thread.callStackSymbols.forEach{print($0)}
+				}
+				progress.completedUnitCount += 1
+				downloads.leave()
+			}
 		}
-		return nil
+
+		concurrentQueue.async {
+			downloads.enter()
+			do {
+				let text = try UsccbReadings.rawContent(for: dateTuple)
+				serialQueue.sync {
+					let (verse, reference) = text.verseBeforeGospel()
+					if let psalmResponse = text.psalmResponse() { self.english.psalmResponse = psalmResponse }
+					if let verse = verse { self.english.verseBeforeGospel = verse }
+					if let reference = reference { self.english.verseBeforeGospelReference = reference }
+				}
+			} catch {
+				print(error)
+				Thread.callStackSymbols.forEach{print($0)}
+			}
+			progress.completedUnitCount += 1
+			downloads.leave()
+		}
+
+		concurrentQueue.async {
+			downloads.enter()
+			do {
+				if case .success(let calendar) = dionysiusCalendar, let text = try calendar[dateTuple]?.first?.download() {
+					serialQueue.sync {
+						let (verse, reference) = text.verseBeforeGospel()
+						if let psalmResponse = text.psalmResponse() { self.dutch.psalmResponse = psalmResponse }
+						if let verse = verse { self.dutch.verseBeforeGospel = verse }
+						if let reference = reference { self.dutch.verseBeforeGospelReference = reference }
+					}
+				}
+			} catch {
+				print(error)
+				Thread.callStackSymbols.forEach{print($0)}
+			}
+			progress.completedUnitCount += 1
+			downloads.leave()
+		}
+
+		downloads.notify(queue: concurrentQueue) {
+			do {
+				let json = try JSONEncoder().encode(self)
+				completionHandler(json, nil)
+			} catch {
+				completionHandler(nil, error)
+			}
+		}
+
+		return progress
 	}
 
 	subscript (_ language: LanguageTag) -> Readings {
@@ -87,73 +156,6 @@ func html(for reading: Reading) -> String {
 
 fileprivate let serialQueue = DispatchQueue(label: "booklet synchronisation")
 fileprivate let concurrentQueue = DispatchQueue(label: "booklet downloader", attributes: .concurrent)
-
-func createBooklet(for date: Date) -> BookletInfo {
-	let dateTuple = try! DateTuple(from: date.components)
-
-	let bookletInfo = BookletInfo()
-
-	let task = DispatchGroup()
-
-	for language in [LanguageTag.english, .dutch] {
-		task.enter()
-		Evangelizo.downloadLiturgicalInfo(of: dateTuple, session: session, priority: .normal, language: language) { (result) in
-			switch result {
-			case .success(let info):
-				let triple = getBasicInfo(from: info)
-				serialQueue.sync {
-					bookletInfo[language].readings = triple.readings
-					bookletInfo[language].psalm = triple.psalm
-					bookletInfo[language].gospel = triple.gospel
-				}
-			case .failure(let error):
-				print(error)
-				Thread.callStackSymbols.forEach{print($0)}
-			}
-			task.leave()
-		}
-	}
-
-	concurrentQueue.async {
-		do {
-			task.enter()
-			let text = try UsccbReadings.rawContent(for: dateTuple)
-			serialQueue.sync {
-				if let psalmResponse = text.psalmResponse() { bookletInfo.english.psalmResponse = psalmResponse }
-				let (verse, reference) = text.verseBeforeGospel()
-				if let verse = verse { bookletInfo.english.verseBeforeGospel = verse }
-				if let reference = reference { bookletInfo.english.verseBeforeGospelReference = reference }
-			}
-			task.leave()
-		} catch {
-			print(error)
-			Thread.callStackSymbols.forEach{print($0)}
-			task.leave()
-		}
-	}
-
-	concurrentQueue.async {
-		do {
-			task.enter()
-			if let text = try DionysiusParochieReadings.downloadCalendar()[dateTuple]?.first?.download() {
-				serialQueue.sync {
-					if let psalmResponse = text.psalmResponse() { bookletInfo.dutch.psalmResponse = psalmResponse }
-					let (verse, reference) = text.verseBeforeGospel()
-					if let verse = verse { bookletInfo.dutch.verseBeforeGospel = verse }
-					if let reference = reference { bookletInfo.dutch.verseBeforeGospelReference = reference }
-				}
-			}
-			task.leave()
-		} catch {
-			print(error)
-			Thread.callStackSymbols.forEach{print($0)}
-			task.leave()
-		}
-	}
-
-	task.wait()
-	return bookletInfo
-}
 
 func getBasicInfo(from entry: DayContainer.Entry) -> (readings: [Reading], psalm: Reading?, gospel: Reading?) {
 	let readings = entry.readings.map {Reading(from: $0)}
