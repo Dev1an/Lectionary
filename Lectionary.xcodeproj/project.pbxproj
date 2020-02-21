@@ -333,6 +333,7 @@
 				CODE_SIGN_ENTITLEMENTS = Lectionary/Lectionary.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Lectionary/Preview Content\"";
 				DEVELOPMENT_TEAM = 7TD9A665TC;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -356,6 +357,7 @@
 				CODE_SIGN_ENTITLEMENTS = Lectionary/Lectionary.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Lectionary/Preview Content\"";
 				DEVELOPMENT_TEAM = 7TD9A665TC;
 				ENABLE_HARDENED_RUNTIME = YES;
