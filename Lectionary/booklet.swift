@@ -12,30 +12,8 @@ import UsccbReadings
 import LectionaryScraper
 import DionysiusParochieReadings
 
-struct Readings: Encodable {
-	var readings: [Reading]
-	var psalm: Reading?
-	var psalmResponse: String?
-	var verseBeforeGospel: String?
-	var verseBeforeGospelReference: String?
-	var gospel: Reading?
-
-	enum CodingKeys: String, CodingKey {
-		case readings, psalm, psalmResponse, verseBeforeGospel, verseBeforeGospelReference, gospel
-	}
-
-	func encode(to encoder: Encoder) throws {
-		var container = encoder.container(keyedBy: CodingKeys.self)
-		try container.encode(readings.map(ReadingJSON.init(withoutBreaks:)), forKey: .readings)
-		if let psalm = psalm { try container.encode(ReadingJSON(withBreaks: psalm), forKey: .psalm) }
-		if let psalmResponse = psalmResponse { try container.encode(psalmResponse, forKey: .psalmResponse) }
-		if let verseBeforeGospel = verseBeforeGospel { try container.encode(verseBeforeGospel, forKey: .verseBeforeGospel) }
-		if let verseBeforeGospelReference = verseBeforeGospelReference { try container.encode(verseBeforeGospelReference, forKey: .verseBeforeGospelReference) }
-		if let gospel = gospel { try container.encode(ReadingJSON(withoutBreaks: gospel), forKey: .gospel) }
-	}
-
-	static let none = Readings(readings: [], psalm: nil, psalmResponse: nil, verseBeforeGospel: nil, verseBeforeGospelReference: nil, gospel: nil)
-}
+fileprivate let serialQueue = DispatchQueue(label: "booklet synchronisation")
+fileprivate let concurrentQueue = DispatchQueue(label: "booklet downloader", attributes: .concurrent)
 
 class BookletInfo: NSObject, NSItemProviderWriting, Encodable {
 	static let writableTypeIdentifiersForItemProvider = [kUTTypeJSON as String, kUTTypeUTF8PlainText as String]
@@ -128,20 +106,46 @@ class BookletInfo: NSObject, NSItemProviderWriting, Encodable {
 		get { return language == .dutch ? dutch : english }
 		set { if language == .dutch { dutch = newValue } else { english = newValue } }
 	}
-}
 
-struct ReadingJSON: Encodable {
-	let text: String
-	let reference: String
+	struct Readings: Encodable {
+		var readings: [Reading]
+		var psalm: Reading?
+		var psalmResponse: String?
+		var verseBeforeGospel: String?
+		var verseBeforeGospelReference: String?
+		var gospel: Reading?
 
-	init(withBreaks reading: Reading) {
-		text = html(for: reading).replacingOccurrences(of: "\n", with: "<br>")
-		reference = reading.readableReference
-	}
+		enum CodingKeys: String, CodingKey {
+			case readings, psalm, psalmResponse, verseBeforeGospel, verseBeforeGospelReference, gospel
+		}
 
-	init(withoutBreaks reading: Reading) {
-		text = html(for: reading).replacingOccurrences(of: "\n", with: "")
-		reference = reading.readableReference
+		func encode(to encoder: Encoder) throws {
+			var container = encoder.container(keyedBy: CodingKeys.self)
+			try container.encode(readings.map(ReadingWithReference.init(withoutBreaks:)), forKey: .readings)
+			if let psalm = psalm { try container.encode(ReadingWithReference(withoutBreaks: psalm), forKey: .psalm) }
+			if let psalmResponse = psalmResponse { try container.encode(psalmResponse, forKey: .psalmResponse) }
+			if let verseBeforeGospel = verseBeforeGospel { try container.encode(verseBeforeGospel, forKey: .verseBeforeGospel) }
+			if let verseBeforeGospelReference = verseBeforeGospelReference { try container.encode(verseBeforeGospelReference, forKey: .verseBeforeGospelReference) }
+			if let gospel = gospel { try container.encode(ReadingWithReference(withoutBreaks: gospel), forKey: .gospel) }
+		}
+
+
+		struct ReadingWithReference: Encodable {
+			let text: String
+			let reference: String
+
+			init(withBreaks reading: Reading) {
+				text = html(for: reading).replacingOccurrences(of: "\n", with: "<br>")
+				reference = reading.readableReference
+			}
+
+			init(withoutBreaks reading: Reading) {
+				text = html(for: reading).replacingOccurrences(of: "\n", with: " ")
+				reference = reading.readableReference
+			}
+		}
+
+		static let none = Readings(readings: [], psalm: nil, psalmResponse: nil, verseBeforeGospel: nil, verseBeforeGospelReference: nil, gospel: nil)
 	}
 }
 
@@ -153,9 +157,6 @@ func html(for reading: Reading) -> String {
 		.map{"<p>\($0)</p>"}
 		.joined(separator: "")
 }
-
-fileprivate let serialQueue = DispatchQueue(label: "booklet synchronisation")
-fileprivate let concurrentQueue = DispatchQueue(label: "booklet downloader", attributes: .concurrent)
 
 func getBasicInfo(from entry: DayContainer.Entry) -> (readings: [Reading], psalm: Reading?, gospel: Reading?) {
 	let readings = entry.readings.map {Reading(from: $0)}
