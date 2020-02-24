@@ -3,11 +3,11 @@
     "pins": [
       {
         "package": "Kanna",
-        "repositoryURL": "https://github.com/tid-kijyun/Kanna.git",
+        "repositoryURL": "https://github.com/dev1an/Kanna.git",
         "state": {
-          "branch": null,
-          "revision": "9b8f73f8c8e145dc496565bbf878a709793e7ba3",
-          "version": "5.0.0"
+          "branch": "feature/native-libxml2",
+          "revision": "51af2dffdc1dcbf643afdd2d69c9da1273cf2a62",
+          "version": null
         }
       }
     ]

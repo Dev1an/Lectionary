@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7401814423F7F7160070560B /* DionysiusParochieReadings in Frameworks */ = {isa = PBXBuildFile; productRef = 7401814323F7F7160070560B /* DionysiusParochieReadings */; };
 		7401814623F7F7160070560B /* Evangelizo in Frameworks */ = {isa = PBXBuildFile; productRef = 7401814523F7F7160070560B /* Evangelizo */; };
 		7401814823F7F7160070560B /* UsccbReadings in Frameworks */ = {isa = PBXBuildFile; productRef = 7401814723F7F7160070560B /* UsccbReadings */; };
 		7401814A23F845380070560B /* booklet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7401814923F845380070560B /* booklet.swift */; };
 		741BF08123FD4D180025AD9A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 741BF08323FD4D180025AD9A /* Localizable.strings */; };
+		7495680A2406916C001B5E6A /* DionysiusParochieReadings in Frameworks */ = {isa = PBXBuildFile; productRef = 749568092406916C001B5E6A /* DionysiusParochieReadings */; };
 		74BB998523F6D9AB00A575A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BB998423F6D9AB00A575A8 /* AppDelegate.swift */; };
 		74BB998723F6D9AB00A575A8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74BB998623F6D9AB00A575A8 /* ContentView.swift */; };
 		74BB998923F6D9AD00A575A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 74BB998823F6D9AD00A575A8 /* Assets.xcassets */; };
@@ -44,7 +44,7 @@
 			files = (
 				7401814823F7F7160070560B /* UsccbReadings in Frameworks */,
 				7401814623F7F7160070560B /* Evangelizo in Frameworks */,
-				7401814423F7F7160070560B /* DionysiusParochieReadings in Frameworks */,
+				7495680A2406916C001B5E6A /* DionysiusParochieReadings in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,9 +119,9 @@
 			);
 			name = Lectionary;
 			packageProductDependencies = (
-				7401814323F7F7160070560B /* DionysiusParochieReadings */,
 				7401814523F7F7160070560B /* Evangelizo */,
 				7401814723F7F7160070560B /* UsccbReadings */,
+				749568092406916C001B5E6A /* DionysiusParochieReadings */,
 			);
 			productName = Lectionary;
 			productReference = 74BB998123F6D9AB00A575A8 /* Lectionary.app */;
@@ -333,7 +333,7 @@
 				CODE_SIGN_ENTITLEMENTS = Lectionary/Lectionary.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Lectionary/Preview Content\"";
 				DEVELOPMENT_TEAM = 7TD9A665TC;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -357,7 +357,7 @@
 				CODE_SIGN_ENTITLEMENTS = Lectionary/Lectionary.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Lectionary/Preview Content\"";
 				DEVELOPMENT_TEAM = 7TD9A665TC;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -398,10 +398,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		7401814323F7F7160070560B /* DionysiusParochieReadings */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = DionysiusParochieReadings;
-		};
 		7401814523F7F7160070560B /* Evangelizo */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Evangelizo;
@@ -409,6 +405,10 @@
 		7401814723F7F7160070560B /* UsccbReadings */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = UsccbReadings;
+		};
+		749568092406916C001B5E6A /* DionysiusParochieReadings */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DionysiusParochieReadings;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

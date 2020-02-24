@@ -15,6 +15,12 @@ import DionysiusParochieReadings
 fileprivate let serialQueue = DispatchQueue(label: "booklet synchronisation")
 fileprivate let concurrentQueue = DispatchQueue(label: "booklet downloader", attributes: .concurrent)
 
+private let encoder: JSONEncoder = {
+	let result = JSONEncoder()
+	result.dateEncodingStrategy = .iso8601
+	return result
+}()
+
 class BookletInfo: NSObject, NSItemProviderWriting, Encodable {
 	static let writableTypeIdentifiersForItemProvider = [kUTTypeJSON as String, kUTTypeUTF8PlainText as String]
 
@@ -92,7 +98,7 @@ class BookletInfo: NSObject, NSItemProviderWriting, Encodable {
 
 		downloads.notify(queue: concurrentQueue) {
 			do {
-				let json = try JSONEncoder().encode(self)
+				let json = try encoder.encode(self)
 				completionHandler(json, nil)
 			} catch {
 				completionHandler(nil, error)
@@ -133,15 +139,18 @@ class BookletInfo: NSObject, NSItemProviderWriting, Encodable {
 		struct ReadingWithReference: Encodable {
 			let text: String
 			let reference: String
+			let book: String
 
 			init(withBreaks reading: Reading) {
 				text = html(for: reading).replacingOccurrences(of: "\n", with: "<br>")
 				reference = reading.readableReference
+				book = reading.book.fullTitle
 			}
 
 			init(withoutBreaks reading: Reading) {
 				text = html(for: reading).replacingOccurrences(of: "\n", with: " ")
 				reference = reading.readableReference
+				book = reading.book.fullTitle
 			}
 		}
 

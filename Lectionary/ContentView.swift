@@ -28,7 +28,7 @@ struct ContentView: View {
 				}.frame(maxWidth: .infinity, alignment: .leading)
 				Divider()
 				ScrollView(.vertical) {
-					ReadingsView(model: model.readingsModel).onDrag { () -> NSItemProvider in
+					ReadingsView(model: model.readingsModel).onDrag {
 						NSItemProvider(object: BookletInfo(for: self.model.date))
 					}
 				}
